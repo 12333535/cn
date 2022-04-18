@@ -398,6 +398,8 @@
     <div id="button-container">
       <button class="main-button" onclick="loadData('enzo')">Enzo</button>
       <button class="main-button" onclick="loadData('manuel')">Manuel</button>
+      <button class="main-button" onclick="loadData('corina')">Corina</button>
+      <button class="main-button" onclick="loadData('alvaro')">Álvaro</button>
     </div>
     <script type="module" src="./index_files/index.js.download"></script>
     <script nomodule="">
@@ -413,9 +415,58 @@
 
       function _calculateAge(birthday) {
         // birthday is a date
-        var ageDifMs = Date.now() - birthday.getTime();
-        var ageDate = new Date(ageDifMs); // miliseconds from epoch
+        const ageDifMs = Date.now() - birthday.getTime();
+        const ageDate = new Date(ageDifMs); // miliseconds from epoch
         return Math.abs(ageDate.getUTCFullYear() - 1970);
+      }
+
+      function getAge(dob) {
+        var now = new Date();
+        var today = new Date(now.getYear(), now.getMonth(), now.getDate());
+
+        var yearNow = now.getYear();
+        var monthNow = now.getMonth();
+        var dateNow = now.getDate();
+
+        var yearDob = dob.getYear();
+        var monthDob = dob.getMonth();
+        var dateDob = dob.getDate();
+        var age = {};
+        var ageString = "";
+
+        yearAge = yearNow - yearDob;
+
+        if (monthNow >= monthDob) var monthAge = monthNow - monthDob;
+        else {
+          yearAge--;
+          var monthAge = 12 + monthNow - monthDob;
+        }
+
+        if (dateNow >= dateDob) var dateAge = dateNow - dateDob;
+        else {
+          monthAge--;
+          var dateAge = 31 + dateNow - dateDob;
+
+          if (monthAge < 0) {
+            monthAge = 11;
+            yearAge--;
+          }
+        }
+
+        age = {
+          years: yearAge,
+          months: monthAge,
+          days: dateAge,
+        };
+
+        ageString =
+          age.years +
+          " año(s) " +
+          age.months +
+          " mes(es)  " +
+          age.days +
+          " día(s)";
+        return ageString;
       }
 
       const loadData = (key) => {
@@ -425,13 +476,21 @@
             name: "MANUEL ALCIDES SALAZAR AGUILAR",
           },
           enzo: {
-            dob: new Date(2003, 5, 22),
+            dob: new Date(2003, 4, 22),
             name: "ENZO JOB SALAZAR REYES",
+          },
+          corina: {
+            dob: new Date(1981, 2, 28),
+            name: "CORINA MADEL REYES COCHACHIN",
+          },
+          alvaro: {
+            dob: new Date(2005, 6, 16),
+            name: "ÁLVARO MÁRLUT SALAZAR REYES",
           },
         };
         const data = datos[key];
         const age = _calculateAge(data.dob);
-        ageEl.textContent = `${age} año(s) 9 mes(es) 4 día(s)`;
+        ageEl.textContent = getAge(data.dob);
 
         const ye = new Intl.DateTimeFormat("en", { year: "numeric" }).format(
           data.dob
@@ -444,6 +503,7 @@
         );
 
         dobEl.textContent = `${da}/${mo}/${ye}`;
+
         nameEl.textContent = data.name;
         buttonContainerEl.classList.add("hide");
         appEl.classList.remove("hide");
